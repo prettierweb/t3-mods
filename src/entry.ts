@@ -1132,7 +1132,8 @@ function start() {
   let overlaySig = "";    // which lanes, so a menu that moves hides and shows the right ones
   // top: how many panes the first row holds, once he has placed a pane by hand (unset: the even grid)
   // main: the full-height layout's window-chat width, as a share of the chat area
-  type Split = { row: number; cols: Record<string, number[]>; top?: number; main?: number };
+  // mode: a layout picked from the grid button's menu ("cols": all side by side, "rows": two even rows); unset is auto
+  type Split = { row: number; cols: Record<string, number[]>; top?: number; main?: number; mode?: "cols" | "rows" };
   let split: Split = { row: 0.5, cols: {} };
   try { split = { ...split, ...JSON.parse(localStorage.getItem("t3lanes") || "{}") }; } catch {}
   const saveSplit = () => { try { localStorage.setItem("t3lanes", JSON.stringify(split)); } catch {} };
@@ -1144,8 +1145,10 @@ function start() {
     const rows = split.top >= panes ? [panes] : [split.top, panes - split.top];
     return (rows.length === 1 ? panes <= 4 : Math.abs(rows[0] - rows[1]) <= 1) ? rows : null;
   };
-  const shape = (panes: number) => customRows(panes) ?? (panes <= 3 ? [panes] : [Math.ceil(panes / 2), Math.floor(panes / 2)]);
-  const fullHeightMain = (panes: number) => !customRows(panes) && panes >= 5 && panes % 2 === 1;
+  const shape = (panes: number) => split.mode === "cols" ? [panes]
+    : split.mode === "rows" ? (panes < 2 ? [panes] : [Math.ceil(panes / 2), Math.floor(panes / 2)])
+    : customRows(panes) ?? (panes <= 3 ? [panes] : [Math.ceil(panes / 2), Math.floor(panes / 2)]);
+  const fullHeightMain = (panes: number) => !split.mode && !customRows(panes) && panes >= 5 && panes % 2 === 1;
   const fracs = (r: number, n: number) => {
     const f = split.cols[`${r}:${n}`];
     return f && f.length === n ? f : Array(n).fill(1 / n);
@@ -1347,8 +1350,8 @@ function start() {
   const paneClosed = (closed: number, n: number) => {
     const panes = n + 2, rows = shape(panes), pane = closed + 1;
     if (split.top === undefined || fullHeightMain(panes)) return;
-    const r = pane < rows[0] ? 0 : 1;
-    split.top = rows.length === 2 ? rows[0] - (r === 0 ? 1 : 0) : panes - 1;
+    void rows; void pane;
+    split.top = undefined; // Nov 14: the panes left go back to the even grid (three: three columns)
   };
   w.__t3lanes = { count(n: number, closed = -1) {
     if (n === 0) split.top = undefined;
@@ -1589,6 +1592,21 @@ function start() {
     overlayCheck();
   });
   w.__t3menu = { show: showMenu };
+  // the sidebar's grid button: pick how the panes are laid out, or pull in the Claude app's grid
+  w.__t3laneLayout = async (x: number, y: number, mirror: () => void) => {
+    const now = split.mode ?? "auto";
+    const id = await showMenu([
+      { id: "auto", label: "Auto layout", checked: now === "auto" },
+      { id: "cols", label: "Side by side", checked: now === "cols" },
+      { id: "rows", label: "Two rows", checked: now === "rows" },
+      { separator: true },
+      { id: "claude", label: "Open my Claude app grid here" },
+    ], x, y);
+    if (id === "claude") { mirror(); return; }
+    if (id !== "auto" && id !== "cols" && id !== "rows") return;
+    split = { ...split, mode: id === "auto" ? undefined : id, top: undefined, cols: {}, row: 0.5, main: undefined };
+    saveSplit(); layoutLanes();
+  };
   cleanup.push(() => { closeMenu?.(null); delete w.__t3menu; });
   // Right-click a New thread button (the pencil at the top, or a project's +): a new chat here or
   // in a new lane, instead of Chromium's Cut/Copy/Paste. Dragging the same button also makes a lane.
@@ -1661,6 +1679,7 @@ function start() {
     if (!drop.side) return;
     placing = (n: number) => {
       const panes = n + 1;
+      split.mode = undefined; // a pane placed by hand leaves a picked layout
       if (drop.side === "below") { split.top = panes - 1; return; }
       const c = d.cells[drop.pane];
       split.top = rows.length === 1 ? panes : c.row === 0 ? rows[0] + 1 : rows[0];

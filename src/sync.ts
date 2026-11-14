@@ -127,10 +127,10 @@ export function startSync(toggleCompact: () => void): [() => void, () => void] {
     grid.type = "button";
     grid.id = "t3s-grid";
     grid.className = newThread.className;
-    grid.setAttribute("aria-label", "Open my Claude app grid here");
-    grid.title = "Open my Claude app grid here";
+    grid.setAttribute("aria-label", "Lane layout");
+    grid.title = "Lane layout";
     grid.innerHTML = GRID_ICON;
-    grid.addEventListener("click", mirror);
+    grid.addEventListener("click", () => { const r = grid.getBoundingClientRect(); if (typeof w.__t3laneLayout === "function") w.__t3laneLayout(r.left, r.bottom + 4, mirror); else mirror(); });
     compact.after(grid);
   };
 

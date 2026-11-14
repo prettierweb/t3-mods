@@ -17,6 +17,7 @@ Open up to eight chats side by side. Two or three sit in a row; four or more mak
 - Right-click the new-chat pencil, or a project's **+**, and pick **New chat in new lane**.
 - Drag a chat out of the sidebar into the chat area to open it as a lane.
 - Drag any line between panes to resize. Drag a point where two lines cross to resize both ways at once. Double-click a line to even it out.
+- The grid button beside search picks the layout: **Auto**, **Side by side** or **Two rows**. Closing a pane puts the rest back on an even grid.
 - Every pane has an **×**. `Ctrl+Shift+W` closes the one you are in.
 
 ![Right-click the pencil for a new lane](docs/img/menu.png)
