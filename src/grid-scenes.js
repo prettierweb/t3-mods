@@ -1,6 +1,6 @@
 // Background scenes from The Grid, only the ones the T3 mods show. Generated; edit with care.
 // @ts-nocheck
-// E:/vibecoding/t3-mods/src/grid/automataEngraving.ts
+// from automataEngraving.ts
 var AP = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
   return `rgba(${p[0]},${p[1]},${p[2]},${a})`;
@@ -1370,7 +1370,7 @@ function nearTone(c, hue, avoid = []) {
   return bi;
 }
 
-// E:/vibecoding/t3-mods/src/grid/bungie.ts
+// from bungie.ts
 var AP2 = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
   return `rgba(${p[0]},${p[1]},${p[2]},${a})`;
@@ -2877,7 +2877,7 @@ var vigil = {
 };
 var SCENES_BUNGIE = [keystone, highKeep, vigil];
 
-// E:/vibecoding/t3-mods/src/grid/cozyScenes.ts
+// from cozyScenes.ts
 var A = (c, a) => `rgba(${c.r},${c.g},${c.b},${a})`;
 var AP3 = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
@@ -3454,7 +3454,7 @@ var Candlelight = {
 };
 var SCENES_COZY = [FirstSnow, Candlelight];
 
-// E:/vibecoding/t3-mods/src/grid/deepSpace.ts
+// from deepSpace.ts
 var TAU4 = Math.PI * 2;
 var AP4 = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
@@ -4311,7 +4311,7 @@ var SCENES_DEEPSPACE = [
   }
 ];
 
-// E:/vibecoding/t3-mods/src/grid/fluidInk.ts
+// from fluidInk.ts
 var TAU5 = Math.PI * 2;
 var clamp3 = (v, a, b) => v < a ? a : v > b ? b : v;
 var rgb2 = (v, a = 1) => `rgba(${v[0] | 0},${v[1] | 0},${v[2] | 0},${a})`;
@@ -4474,7 +4474,7 @@ var SCENES_FLUIDINK = [
   }
 ];
 
-// E:/vibecoding/t3-mods/src/grid/growth.ts
+// from growth.ts
 var TAU6 = 6.283185307179586;
 var PAL = (c, i) => c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
 function TWr(c, i, k) {
@@ -5660,7 +5660,7 @@ var meadow = {
 };
 var SCENES_GROWTH = [reef, meadow];
 
-// E:/vibecoding/t3-mods/src/grid/nightLandscapes.ts
+// from nightLandscapes.ts
 var AP5 = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
   return `rgba(${p[0]},${p[1]},${p[2]},${a})`;
@@ -6240,7 +6240,7 @@ var SCENES_NIGHT = [
   }
 ];
 
-// E:/vibecoding/t3-mods/src/grid/nightPlaces.ts
+// from nightPlaces.ts
 var TAU7 = Math.PI * 2;
 var AP6 = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
@@ -7152,7 +7152,7 @@ var SCENES_NIGHTPLACES = [
   }
 ];
 
-// E:/vibecoding/t3-mods/src/grid/physicsPhase.ts
+// from physicsPhase.ts
 var TAU8 = Math.PI * 2;
 var clamp6 = (v, a, b) => v < a ? a : v > b ? b : v;
 var sstep6 = (e0, e1, x) => {
@@ -8583,7 +8583,7 @@ var SCENES_PHASE = [
   attractor(IKEDA)
 ];
 
-// E:/vibecoding/t3-mods/src/grid/cloudKit.ts
+// from cloudKit.ts
 var hash2 = (x, y, s) => {
   let h = Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(s, 1442695041);
   h = Math.imul(h ^ h >>> 13, 1274126177);
@@ -8685,7 +8685,7 @@ function ridge(n, cells, seed, oct = 4) {
   return out;
 }
 
-// E:/vibecoding/t3-mods/src/grid/placeScenes.ts
+// from placeScenes.ts
 var TAU9 = Math.PI * 2;
 var AP7 = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
@@ -9575,7 +9575,7 @@ var SCENES_PLACES = [
   }
 ];
 
-// E:/vibecoding/t3-mods/src/grid/skyWater.ts
+// from skyWater.ts
 var AP8 = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
   return `rgba(${p[0]},${p[1]},${p[2]},${a})`;
@@ -10641,7 +10641,7 @@ var milkyWay = {
 };
 var SCENES_SKY = [cloudSea, sunkenLight, distantStorm, milkyWay];
 
-// E:/vibecoding/t3-mods/src/grid/waterLight.ts
+// from waterLight.ts
 var TAU10 = Math.PI * 2;
 var AP9 = (c, i, a) => {
   const p = c.pal[(i % c.pal.length + c.pal.length) % c.pal.length];
