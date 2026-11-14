@@ -8,6 +8,7 @@ import { SCENES_THEMES, THEMES, RING_CSS } from "./themes";
 import { startDictation } from "./dictation";
 import { startCompact } from "./compact";
 import { startPrivacy } from "./privacy";
+import { startHealth } from "./health";
 import { startSync } from "./sync";
 import { startRecent } from "./recent";
 import { startUsage } from "./usage";
@@ -418,6 +419,7 @@ function start() {
   cleanup.push(recentCleanup);
   // what each account has left, in words, under the model picker (usage.ts)
   if (hasExtra("usage")) cleanup.push(startUsage());
+  cleanup.push(startHealth(IS_LANE));
 
   const style = document.createElement("style");
   style.id = "t3-scene-style";

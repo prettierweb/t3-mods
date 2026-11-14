@@ -37,7 +37,8 @@ const LIVE = join(HERE, "dist", "t3-mods.live.js");
 const CONFIG = (() => { try { return JSON.parse(readFileSync(join(HERE, "..", "config.json"), "utf8").replace(/^﻿/, "")); } catch { return {}; } })();
 const has = (file) => { try { return !!file && statSync(file).isFile(); } catch { return false; } };
 // what the page may show: sent ahead of the bundle as window.__t3modsCfg
-const PAGE_CFG = { kani: has(CONFIG.kaniExe), atrium: has(CONFIG.atriumExe), library: has(CONFIG.libraryServer), usage: has(CONFIG.usageModule), dictation: !!CONFIG.dictation, accounts: CONFIG.accounts ?? {} };
+const t3Version = () => { try { return readFileSync(join(homedir(), ".t3", "userdata", "desktop-last-started-version"), "utf8").trim(); } catch { return ""; } };
+const PAGE_CFG = { t3Version: t3Version(), update: null, kani: has(CONFIG.kaniExe), atrium: has(CONFIG.atriumExe), library: has(CONFIG.libraryServer), usage: has(CONFIG.usageModule), dictation: !!CONFIG.dictation, accounts: CONFIG.accounts ?? {} };
 const WATCH = process.argv.includes("--watch");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const LOG = join(HERE, "t3-mods.log");
@@ -162,7 +163,43 @@ function syncChats() {
     });
   }));
 }
+// Updates: once a day (and at start) ask the repo whether main has moved on. Needs git and a
+// copy that was cloned; a copy without .git just never shows the notice. "Update now" pulls,
+// then hands over to a fresh copy of this script, which loads the new files into every window.
+const REPO = join(HERE, "..");
+const git = (args) => execFileSync("git", ["-C", REPO, ...args], { encoding: "utf8", windowsHide: true, timeout: 60000, stdio: ["ignore", "pipe", "pipe"] }).trim();
+let updateCheck = 0;
+async function checkUpdate(list) {
+  if (CONFIG.checkUpdates === false || Date.now() - updateCheck < 24 * 3600 * 1000) return;
+  updateCheck = Date.now();
+  let update = null;
+  try {
+    git(["fetch", "--quiet", "origin", "main"]);
+    const behind = Number(git(["rev-list", "--count", "HEAD..origin/main"])) || 0;
+    if (behind > 0) update = { behind, subject: git(["log", "-1", "--format=%s", "origin/main"]).slice(0, 80) };
+  } catch (e) { log(`update check: ${String(e.message).split("\n")[0]}`); return; }
+  PAGE_CFG.update = update; sourceTime = 0; // new windows learn it from the bundle's settings
+  for (const t of list) evaluate(t, `window.__t3modsUpdate?.(${JSON.stringify(update)})`).catch(() => {});
+  if (update) log(`update ready: ${update.behind} behind, ${update.subject}`);
+}
+function applyUpdate(reply) {
+  try {
+    if (git(["status", "--porcelain", "--untracked-files=no"])) { reply(`window.__t3modsUpdated?.(${JSON.stringify({ error: "This copy of the mods has been edited by hand, so it can't update itself. Ask a chat to merge the latest t3-mods from GitHub." })})`); return; }
+    git(["pull", "--ff-only", "--quiet", "origin", "main"]);
+  } catch (e) {
+    log(`update: ${e.message}`);
+    reply(`window.__t3modsUpdated?.(${JSON.stringify({ error: "Could not download the update; see t3-mods.log" })})`);
+    return;
+  }
+  log("update: pulled, handing over to the new launcher");
+  reply(`window.__t3modsUpdated?.({ ok: true })`);
+  setTimeout(() => {
+    spawn(process.execPath, [join(HERE, "t3-mods.mjs"), "--watch"], { detached: true, stdio: "ignore", windowsHide: true }).unref();
+    process.exit(0);
+  }, 400);
+}
 async function host(request, reply) {
+  if (request === "mods-update") { applyUpdate(reply); return; }
   // a right-click menu's "Open in Kani" / "Show in Atrium" (src/entry.ts): start that app with the link or path
   if (request.startsWith("open-with:")) {
     try {
@@ -563,6 +600,7 @@ for (;;) {
       live.set(t.id, inject(t).then(() => live.delete(t.id)));
     }
     await checkRequests(list);
+    if (list.length) checkUpdate(list);
     if (!CONFIG.helperUrl && CONFIG.syncChats !== false && list.length && Date.now() - lastSync > (CONFIG.syncEveryMinutes ?? 15) * 60000) syncChats();
     ensureDictation();
     if (list.length && !patchedPid) await patchMain();

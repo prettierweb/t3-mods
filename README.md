@@ -109,6 +109,14 @@ powershell -ExecutionPolicy Bypass -File .\uninstall.ps1
 
 This removes the login item, stops the script and puts T3's shortcuts back. Your chats and T3 itself are not touched.
 
+## Updates
+
+Once a day the mods ask this repo whether there is something newer. When there is, a line appears at the foot of the sidebar: **Mods update, ready, click to install**. Click it, then **Update now**. The new version loads into every open window; T3 does not restart.
+
+The mods also check themselves. T3 updates on its own, and an update can move something a mod stands on. When that happens the same line names the mod that needs a fix, for example **Status bar needs a fix**. The other mods keep working, and a fix arrives here as a normal update.
+
+Both checks are free: one small request to GitHub a day, no model. A copy you have edited by hand will not update itself; ask a chat to merge the latest version instead. Set `"checkUpdates": false` in `config.json` to switch the daily check off.
+
 ## Chat sync
 
 T3's welcome screen imports your existing Claude chats once. After that the mods keep it current:
