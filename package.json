@@ -1,0 +1,15 @@
+{
+  "name": "t3-mods",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Lanes, a status head bar, right-click menus, themes and chat sync for T3 Code on Windows",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/entry.ts --bundle --minify --format=iife --outfile=mods/dist/t3-scenes.js",
+    "start": "node mods/t3-mods.mjs --restart",
+    "sync": "node tools/sync-claude-chats.mjs",
+    "tidy": "node tools/tidy-recent.mjs"
+  },
+  "devDependencies": { "esbuild": "^0.25.0" },
+  "engines": { "node": ">=22.13" }
+}

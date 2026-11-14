@@ -1,0 +1,12 @@
+{
+  "syncChats": true,
+  "syncEveryMinutes": 15,
+  "accounts": { "claudeAgent": "" },
+
+  "kaniExe": "",
+  "atriumExe": "",
+  "libraryServer": "",
+  "usageModule": "",
+  "helperUrl": "",
+  "dictation": false
+}

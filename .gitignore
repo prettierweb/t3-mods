@@ -1,0 +1,10 @@
+node_modules/
+config.json
+*.log
+mods/dist/t3-mods.live.js
+sync-state.json
+sync-new.txt
+t3-requests*.json
+tools/last-settled.json
+Start T3 with mods.vbs
+*.bak*
