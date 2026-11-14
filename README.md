@@ -74,6 +74,12 @@ Chats you start in the Claude desktop app or the `claude` command line show up i
 
 You need Windows 10 or 11, T3 Code, and Node.js 22.13 or newer.
 
+**The short way:** open a chat in T3 Code and paste this:
+
+> Set up the T3 mods from https://github.com/prettierweb/t3-mods on this PC. Follow the Install section of its README. Install Node.js first if it is missing. T3 will restart at the end, which closes this chat; that means it worked.
+
+**By hand:**
+
 1. Install T3 Code from [t3.codes](https://t3.codes), open it once, and add your project folders.
 2. Install Node.js if you don't have it: `winget install OpenJS.NodeJS.LTS`
 3. Get this folder and run the installer in PowerShell:
