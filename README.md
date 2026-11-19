@@ -1,5 +1,7 @@
 # T3 mods
 
+<p align="center">⭐ if you like this, please star it, it really helps people find it ⭐</p>
+
 Add-ons for [T3 Code](https://t3.codes) on Windows: several chats side by side, a status bar on every chat, a tighter sidebar, right-click menus, animated themes, and Claude chats that copy themselves in.
 
 T3 Code stays the regular app from the official installer. Nothing in its folder is edited, it keeps updating itself, and one script removes everything here.
